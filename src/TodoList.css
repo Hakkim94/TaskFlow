@@ -1,0 +1,575 @@
+/* ==========================================================================
+   Premium To-Do List styling
+   CSS only. Uses the existing classNames:
+   .Website  .InputBox  .Add-Button  .Tasks-List  .Task
+   .Delete-Button  .Up-Button  .Down-Button
+   ========================================================================== */
+
+/* ---------- Design tokens ---------- */
+:root {
+  --bg-0: #0b0d1a;
+  --bg-1: #12152b;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.075);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.18);
+
+  --text: #eef0ff;
+  --text-muted: #9aa0c3;
+
+  --accent-1: #7c5cff;
+  --accent-2: #3d8bff;
+  --accent-glow: rgba(124, 92, 255, 0.45);
+
+  --up: #2fd5a3;
+  --down: #4ea8ff;
+  --danger: #ff5c7a;
+
+  --radius-lg: 28px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --font: "Inter", "SF Pro Display", "Segoe UI", system-ui, -apple-system,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------- Page background ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background:
+    radial-gradient(900px 500px at 12% -10%, rgba(124, 92, 255, 0.28), transparent 60%),
+    radial-gradient(800px 500px at 100% 10%, rgba(61, 139, 255, 0.2), transparent 60%),
+    radial-gradient(700px 600px at 50% 120%, rgba(47, 213, 163, 0.12), transparent 60%),
+    linear-gradient(160deg, var(--bg-1) 0%, var(--bg-0) 100%);
+  background-attachment: fixed;
+}
+
+/* ---------- Main card ---------- */
+.Website {
+  position: relative;
+  width: min(680px, calc(100% - 32px));
+  margin: clamp(24px, 7vh, 72px) auto;
+  padding: clamp(22px, 4vw, 40px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
+  row-gap: 18px;
+  align-items: center;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.07),
+    rgba(255, 255, 255, 0.02)
+  );
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 30px 80px -20px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(0, 0, 0, 0.2);
+  animation: card-in 0.7s var(--ease) both;
+}
+
+/* Soft glowing edge on the top of the card */
+.Website::before {
+  content: "";
+  position: absolute;
+  inset: 0 24px auto 24px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(160, 140, 255, 0.8),
+    rgba(90, 170, 255, 0.8),
+    transparent
+  );
+  pointer-events: none;
+}
+
+/* Every direct child spans the full width by default.
+   The input and button are placed side by side below. */
+.Website > * {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+/* Heading inside the card */
+.Website > h1,
+.Website > h2 {
+  margin: 0 0 6px;
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  background: linear-gradient(120deg, #ffffff 10%, #b9a8ff 55%, #7fb6ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.Website > p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ---------- Input ---------- */
+.Website > .InputBox {
+  grid-column: 1;
+}
+
+.InputBox {
+  width: 100%;
+  height: 56px;
+  padding: 0 20px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+  caret-color: var(--accent-1);
+  background: rgba(8, 10, 24, 0.55);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  outline: none;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  transition:
+    border-color 0.25s var(--ease),
+    box-shadow 0.25s var(--ease),
+    background-color 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+.InputBox::placeholder {
+  color: var(--text-muted);
+  font-weight: 400;
+  opacity: 0.8;
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+}
+
+.InputBox:hover {
+  border-color: var(--border-strong);
+}
+
+.InputBox:focus {
+  border-color: var(--accent-1);
+  background: rgba(10, 12, 30, 0.8);
+  box-shadow:
+    0 0 0 4px rgba(124, 92, 255, 0.2),
+    0 10px 30px -10px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+.InputBox:focus::placeholder {
+  opacity: 0.35;
+  transform: translateX(4px);
+}
+
+/* ---------- Add button ---------- */
+.Website > .Add-Button {
+  grid-column: 2;
+}
+
+.Add-Button {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 56px;
+  padding: 0 26px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #fff;
+  white-space: nowrap;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%);
+  border: 0;
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35) inset,
+    0 12px 28px -10px var(--accent-glow);
+  transition:
+    transform 0.3s var(--ease),
+    box-shadow 0.3s var(--ease),
+    filter 0.3s var(--ease);
+}
+
+/* Plus icon drawn with a mask, so no extra elements are needed */
+.Add-Button::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: transform 0.45s var(--ease);
+}
+
+/* Light sweep on hover */
+.Add-Button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+}
+
+.Add-Button:hover {
+  transform: translateY(-3px);
+  filter: saturate(1.15) brightness(1.06);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.4) inset,
+    0 18px 36px -10px var(--accent-glow);
+}
+
+.Add-Button:hover::before {
+  transform: rotate(180deg) scale(1.1);
+}
+
+.Add-Button:hover::after {
+  transform: translateX(120%);
+  transition: transform 0.8s var(--ease);
+}
+
+.Add-Button:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 6px 16px -8px var(--accent-glow);
+}
+
+.Add-Button:focus-visible {
+  outline: 3px solid rgba(124, 92, 255, 0.55);
+  outline-offset: 3px;
+}
+
+/* ---------- Task list ---------- */
+.Tasks-List {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+/* Friendly empty state */
+.Tasks-List:empty::before {
+  content: "Nothing here yet. Add your first task above.";
+  display: block;
+  padding: 34px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+/* ---------- Task card ---------- */
+.Task {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) repeat(3, auto);
+  align-items: center;
+  column-gap: 8px;
+  padding: 14px 14px 14px 22px;
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--text);
+  overflow-wrap: anywhere;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.7);
+  animation: task-in 0.5s var(--ease) both;
+  transition:
+    transform 0.3s var(--ease),
+    background-color 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
+}
+
+/* Accent bar on the left edge */
+.Task::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: linear-gradient(180deg, var(--accent-1), var(--accent-2));
+  opacity: 0.55;
+  transition: opacity 0.3s var(--ease), top 0.3s var(--ease), bottom 0.3s var(--ease);
+}
+
+.Task:hover {
+  transform: translateY(-3px);
+  background: var(--surface-hover);
+  border-color: rgba(140, 120, 255, 0.4);
+  box-shadow:
+    0 18px 40px -18px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(124, 92, 255, 0.12);
+}
+
+.Task:hover::before {
+  opacity: 1;
+  top: 8px;
+  bottom: 8px;
+}
+
+/* ---------- Action buttons (shared) ---------- */
+.Delete-Button,
+.Up-Button,
+.Down-Button {
+  --tone: var(--accent-1);
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin: 0;
+  /* hides any existing label text, the icon below replaces it */
+  font-size: 0;
+  line-height: 0;
+  color: var(--tone);
+  cursor: pointer;
+  background: color-mix(in srgb, var(--tone) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tone) 30%, transparent);
+  border-radius: var(--radius-sm);
+  transition:
+    transform 0.25s var(--ease),
+    background 0.25s var(--ease),
+    color 0.25s var(--ease),
+    box-shadow 0.25s var(--ease),
+    border-color 0.25s var(--ease);
+}
+
+.Delete-Button::before,
+.Up-Button::before,
+.Down-Button::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background-color: currentColor;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  transition: transform 0.3s var(--ease);
+}
+
+.Delete-Button:hover,
+.Up-Button:hover,
+.Down-Button:hover {
+  color: #fff;
+  background: var(--tone);
+  border-color: transparent;
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 10px 22px -8px var(--tone);
+}
+
+.Delete-Button:active,
+.Up-Button:active,
+.Down-Button:active {
+  transform: scale(0.92);
+  box-shadow: none;
+}
+
+.Delete-Button:focus-visible,
+.Up-Button:focus-visible,
+.Down-Button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--tone) 55%, transparent);
+  outline-offset: 2px;
+}
+
+.Delete-Button:disabled,
+.Up-Button:disabled,
+.Down-Button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  color: var(--text-muted);
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+/* ---------- Individual button personalities ---------- */
+.Up-Button {
+  --tone: var(--up);
+}
+.Up-Button::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 19V5M5 12l7-7 7 7'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 19V5M5 12l7-7 7 7'/%3E%3C/svg%3E");
+}
+.Up-Button:hover:not(:disabled)::before {
+  transform: translateY(-2px);
+}
+
+.Down-Button {
+  --tone: var(--down);
+}
+.Down-Button::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M19 12l-7 7-7-7'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M19 12l-7 7-7-7'/%3E%3C/svg%3E");
+}
+.Down-Button:hover:not(:disabled)::before {
+  transform: translateY(2px);
+}
+
+.Delete-Button {
+  --tone: var(--danger);
+}
+.Delete-Button::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v5M14 11v5'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v5M14 11v5'/%3E%3C/svg%3E");
+}
+.Delete-Button:hover:not(:disabled)::before {
+  transform: rotate(-12deg) scale(1.1);
+}
+
+/* ---------- Animations ---------- */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes task-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Responsive: tablet ---------- */
+@media (max-width: 768px) {
+  .Website {
+    margin-top: 32px;
+    border-radius: 24px;
+  }
+}
+
+/* ---------- Responsive: mobile ---------- */
+@media (max-width: 520px) {
+  .Website {
+    width: calc(100% - 20px);
+    margin: 14px auto 28px;
+    padding: 20px 16px;
+    border-radius: 22px;
+    row-gap: 14px;
+  }
+
+  /* Input on top, full width button below */
+  .Website > .InputBox,
+  .Website > .Add-Button {
+    grid-column: 1 / -1;
+  }
+
+  .InputBox,
+  .Add-Button {
+    height: 52px;
+  }
+
+  .Add-Button {
+    width: 100%;
+  }
+
+  .Task {
+    padding: 12px 10px 12px 18px;
+    column-gap: 6px;
+    font-size: 0.98rem;
+  }
+
+  .Delete-Button,
+  .Up-Button,
+  .Down-Button {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+
+  .Delete-Button::before,
+  .Up-Button::before,
+  .Down-Button::before {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* ---------- Very small screens ---------- */
+@media (max-width: 340px) {
+  .Task {
+    column-gap: 4px;
+  }
+
+  .Delete-Button,
+  .Up-Button,
+  .Down-Button {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* ---------- Touch devices: no sticky hover lift ---------- */
+@media (hover: none) {
+  .Task:hover,
+  .Add-Button:hover {
+    transform: none;
+  }
+}
+
+/* ---------- Respect reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
