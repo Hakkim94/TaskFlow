@@ -1,6 +1,7 @@
 import React, {useEffect, useState}  from "react";
 import './TodoList.css'
-import  TaskFlowLogo from './assets/TaskFlow_Logo.png'
+import logo from './assets/logo.png'
+
 
 function ToDoList(){
 
@@ -46,8 +47,9 @@ function ToDoList(){
     return(
         <>
         <div className="Website">
-            <img src={TaskFlowLogo} className="TaskFlowLogo"></img>
-           <h1> TO-DO-LIST</h1> 
+
+           <img className="TaskFlowLogo" src={logo} alt="TaskFlow logo" />          
+           <h1> To-Do-List</h1> 
            <input type="text" className="InputBox" value={NewTask} onChange={HandleInputChange} placeholder="Enter a task"></input>
            <button className="Add-Button" onClick={createTask}>ADD</button>
           
