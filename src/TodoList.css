@@ -137,6 +137,30 @@ body {
   grid-column: 1;
 }
 
+/* ---------- Logo ---------- */
+.TaskFlowLogo {
+  display: block;
+  justify-self: center;
+  width: min(50%, 360px);     /* bigger: raise this for an even larger logo */
+  height: auto;
+  object-fit: contain;
+  margin: -34px auto -34px;    /* cancels the empty space inside the PNG */
+  filter: drop-shadow(0 8px 22px rgba(124, 92, 255, 0.45));
+  transition: transform 0.35s var(--ease), filter 0.35s var(--ease);
+}
+
+.TaskFlowLogo:hover {
+  transform: scale(1.04);
+  filter: drop-shadow(0 12px 30px rgba(124, 92, 255, 0.7));
+}
+
+@media (max-width: 520px) {
+  .TaskFlowLogo {
+    width: min(100%, 260px);
+    margin: -24px auto -24px;
+  }
+}
+
 .InputBox {
   width: 100%;
   height: 56px;
